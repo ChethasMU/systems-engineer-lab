@@ -10,6 +10,8 @@ def home():
 @app.route("/user/<username>")
 def lookup(username):
     resp = requests.get(f"https://api.github.com/users/{username}", timeout=10)
+    if resp.status_code == 404:
+        return jsonify({"error": f"user '{username}' not found"}), 404
     resp.raise_for_status()
     data = resp.json()
     return jsonify({
